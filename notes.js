@@ -24,6 +24,9 @@ localhost:9966
 create new file for shader 
 canvas-sketch shader.js --new --template=shader
 
+use flag --hot to get all the changes 
+updating instantly into your scene 
+
 
 SHADERS 
 
@@ -115,6 +118,9 @@ const frag = glsl(`
   }
 `);
 
+//set clearColor: "transparent", 
+to set to transparent bckgd if you want to donwload as PNG 
+
 //white background 
 // Your sketch, which simply returns the shader
 const sketch = ({ gl }) => {
@@ -135,6 +141,93 @@ const sketch = ({ gl }) => {
     }
   });
 };
+
+float alpha = 1;
+--> all the pixels in the image are full transparency 
+
+step: --> really useful when writing shaders 
+if the first argument is less than the second argument 
+return 0, otherwise return 1
+float alpha = step(dist, 0.25);
+
+//really cool: gradient backd, white centered radial circle 
+const frag = glsl(`
+  precision highp float;
+
+  uniform float time;
+  uniform float aspect;
+  varying vec2 vUv;
+
+  void main () {
+    vec3 colorA = vec3(1.0, 1.0, 1.0);
+    vec3 colorB = vec3(0.2, 0.3, 0.4);
+
+    vec2 center = vUv - 0.5;
+    center.x *= aspect;
+    float dist = length(center);
+
+    float alpha = smoothstep(0.25, 0.5, dist);
+
+    vec3 color = mix(colorA, colorB, vUv.x);
+    gl_FragColor = vec4(color, alpha);
+  }
+`);
+
+if you want a crisp edge: 
+float alpha = smoothstep(0.255, 0.25, dist);
+
+cool animation 
+vec3 colorA = sin(time) + vec3(1.0, 1.0, 1.0);
+
+really cool!!!
+const frag = glsl(`
+  precision highp float;
+
+  uniform float time;
+  uniform float aspect;
+  varying vec2 vUv;
+
+  void main () {
+    vec3 colorA = sin(time) + vec3(1.0, 1.0, 1.0);
+    vec3 colorB = vec3(0.2, 0.3, 0.4);
+
+    vec2 center = vUv - 0.5;
+    center.x *= aspect;
+    float dist = length(center);
+
+    float alpha = smoothstep(0.25, 0.5, dist);
+
+    vec3 color = mix(colorA, colorB, vUv.y + vUv.x * sin(time));
+    gl_FragColor = vec4(color, alpha);
+  }
+`);
+
+variation:  smoothstep(0.75, 0.5, dist);
+   float alpha = smoothstep(0.75 + sin(time), 0.5, dist);
+
+   try adding sin(time) for variation 
+
+using shaders with threejs: 
+- in threejs, you can specify your own shader string 
+
+you can slow down the animation by multiplying time by a low number 
+// or bulk it by multiplying it by some high number 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
