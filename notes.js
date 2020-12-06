@@ -24,6 +24,8 @@ localhost:9966
 create new file for shader 
 canvas-sketch shader.js --new --template=shader
 
+canvas-sketch shader.js --open --hot
+
 use flag --hot to get all the changes 
 updating instantly into your scene 
 
@@ -213,6 +215,10 @@ using shaders with threejs:
 you can slow down the animation by multiplying time by a low number 
 // or bulk it by multiplying it by some high number 
 
+CMD S to save PNG (click right: save image) 
+you can also output to gif 
+
+change time in uniforms to say "playhead"
 
 
 
